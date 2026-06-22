@@ -71,8 +71,16 @@ function Projects() {
     const description = project.description || "";
 
     return (
-      name.toLowerCase().includes(search.toLowerCase()) ||
-      description.toLowerCase().includes(search.toLowerCase())
+      name
+
+        .toLowerCase()
+
+        .includes(search.toLowerCase()) ||
+      description
+
+        .toLowerCase()
+
+        .includes(search.toLowerCase())
     );
   });
 
@@ -152,6 +160,8 @@ function Projects() {
 
                   <TableCell>Description</TableCell>
 
+                  <TableCell>Image</TableCell>
+
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -164,6 +174,22 @@ function Projects() {
                     <TableCell>{project.name}</TableCell>
 
                     <TableCell>{project.description}</TableCell>
+
+                    <TableCell>
+                      {project.image && (
+                        <img
+                          src={project.image}
+                          alt="project"
+                          width="90"
+                          height="70"
+                          style={{
+                            borderRadius: "8px",
+
+                            objectFit: "cover",
+                          }}
+                        />
+                      )}
+                    </TableCell>
 
                     <TableCell>
                       <ProjectCard
