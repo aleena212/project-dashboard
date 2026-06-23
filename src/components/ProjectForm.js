@@ -123,7 +123,7 @@ function ProjectForm({
             }
           />
 
-          <Box mt={5}>
+          <Box mt={3}>
             {!isViewMode && (
               <Button
                 type="submit"
