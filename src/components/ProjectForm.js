@@ -1,6 +1,10 @@
-import { Dialog, Button, TextField, Box, Typography } from "@mui/material";
+import { Dialog, Button, Box, Typography } from "@mui/material";
+
 import { useForm } from "react-hook-form";
+
 import { useEffect } from "react";
+
+import ProjectFields from "./ProjectFields";
 
 function ProjectForm({
   open,
@@ -12,23 +16,31 @@ function ProjectForm({
   setProjects,
 }) {
   const {
-    register,
+    control,
     handleSubmit,
     reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      image: null,
+    },
+  });
 
   useEffect(() => {
     if (selectedProject) {
       reset({
         name: selectedProject.name,
         description: selectedProject.description,
+        image: null,
       });
     } else {
       reset({
         name: "",
         description: "",
+        image: null,
       });
     }
   }, [selectedProject, reset]);
@@ -38,28 +50,37 @@ function ProjectForm({
 
     const finalData = {
       ...data,
-      image: file ? URL.createObjectURL(file) : selectedProject?.image,
+      image: file
+        ? URL.createObjectURL(file)
+        : selectedProject?.image,
     };
 
     if (editMode) {
       setProjects(
         projects.map((project) =>
           project.id === selectedProject.id
-            ? { ...project, ...finalData }
-            : project,
-        ),
+            ? {
+                ...project,
+                ...finalData,
+              }
+            : project
+        )
       );
     } else {
       addProject(finalData);
     }
 
     reset();
+
     setOpen(false);
   };
 
-  const isViewMode = selectedProject && !editMode;
+  const isViewMode =
+    selectedProject &&
+    !editMode;
 
-  const preview = watch("image");
+  const preview =
+    watch("image");
 
   return (
     <Dialog
@@ -69,84 +90,58 @@ function ProjectForm({
         reset();
       }}
     >
-      <Box sx={{ padding: 4, width: 500 }}>
-        <Typography variant="h5" mb={2}>
+      <Box
+        sx={{
+          padding: 4,
+          width: 500,
+        }}
+      >
+        <Typography
+          variant="h5"
+          mb={2}
+        >
           {isViewMode
             ? "View Project"
             : editMode
-              ? "Edit Project"
-              : "Add Project"}
+            ? "Edit Project"
+            : "Add Project"}
         </Typography>
 
-        <form onSubmit={handleSubmit(submit)}>
-          <TextField
-            label="Project Name"
-            fullWidth
-            margin="normal"
-            disabled={isViewMode}
-            {...register("name", {
-              required: "Project name required",
-            })}
-            error={!!errors.name}
-            helperText={errors.name?.message}
+        <form
+          onSubmit={handleSubmit(submit)}
+        >
+          <ProjectFields
+            control={control}
+            errors={errors}
+            preview={preview}
+            selectedProject={
+              selectedProject
+            }
+            editMode={editMode}
+            isViewMode={
+              isViewMode
+            }
           />
-
-          <TextField
-            label="Project Description"
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-            disabled={isViewMode}
-            {...register("description", {
-              required: "Description required",
-            })}
-            error={!!errors.description}
-            helperText={errors.description?.message}
-          />
-
-          {!isViewMode && (
-            <TextField
-              type="file"
-              fullWidth
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              {...register("image")}
-            />
-          )}
-
-          {(selectedProject?.image || preview?.[0]) && (
-            <Box mt={2}>
-              <img
-                src={
-                  preview?.[0]
-                    ? URL.createObjectURL(preview[0])
-                    : selectedProject.image
-                }
-                alt="project"
-                width="100%"
-                height="220"
-                style={{
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                }}
-              />
-            </Box>
-          )}
 
           <Box mt={3}>
             {!isViewMode && (
-              <Button type="submit" variant="contained" fullWidth>
-                {editMode ? "Update" : "Save"}
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+              >
+                {editMode
+                  ? "Update"
+                  : "Save"}
               </Button>
             )}
 
             <Button
               variant="outlined"
               fullWidth
-              sx={{ mt: 2 }}
+              sx={{
+                mt: 2,
+              }}
               onClick={() => {
                 setOpen(false);
                 reset();
