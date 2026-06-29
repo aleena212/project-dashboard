@@ -8,8 +8,8 @@ export const projectValidation = {
     },
 
     maxLength: {
-      value: 30,
-      message: "Maximum 30 characters",
+      value: 100,
+      message: "Maximum 100 characters",
     },
   },
 
@@ -22,8 +22,8 @@ export const projectValidation = {
     },
 
     maxLength: {
-      value: 200,
-      message: "Maximum 200 characters",
+      value: 1000,
+      message: "Maximum 1000 characters",
     },
   },
 

@@ -1,60 +1,42 @@
 import { TextField, Box, Typography } from "@mui/material";
-
 import { Controller } from "react-hook-form";
 
 import { projectValidation } from "./validation/projectValidation";
+import FormTextField from "./FormTextField";
 
 function ProjectFields({
   control,
-
   errors,
-
   isViewMode,
-
   preview,
-
   selectedProject,
-
   editMode,
 }) {
   return (
     <>
-      <Controller
+      {/* Project Name */}
+      <FormTextField
         name="name"
+        label="Project Name"
         control={control}
         rules={projectValidation.name}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Project Name"
-            fullWidth
-            margin="normal"
-            disabled={isViewMode}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-          />
-        )}
+        errors={errors}
+        disabled={isViewMode}
       />
 
-      <Controller
+      {/* Project Description */}
+      <FormTextField
         name="description"
+        label="Project Description"
         control={control}
         rules={projectValidation.description}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Project Description"
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-            disabled={isViewMode}
-            error={!!errors.description}
-            helperText={errors.description?.message}
-          />
-        )}
+        errors={errors}
+        disabled={isViewMode}
+        multiline
+        rows={4}
       />
 
+      {/* Project Image */}
       {!isViewMode && (
         <Controller
           name="image"
@@ -92,6 +74,7 @@ function ProjectFields({
         />
       )}
 
+      {/* Image Preview */}
       {(selectedProject?.image || preview?.[0]) && (
         <Box mt={2}>
           <img
@@ -103,6 +86,10 @@ function ProjectFields({
             alt="project"
             width="100%"
             height="220"
+            style={{
+              objectFit: "cover",
+              borderRadius: "10px",
+            }}
           />
         </Box>
       )}
