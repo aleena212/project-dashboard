@@ -1,14 +1,12 @@
-import { TextField, Box, Typography } from "@mui/material";
-import { Controller } from "react-hook-form";
-
-import { projectValidation } from "./validation/projectValidation";
-
 import FormTextField from "./FormTextField";
 import FormSelect from "./FormSelect";
 import FormMultiSelect from "./FormMultiSelect";
 import FormCheckbox from "./FormCheckbox";
 import FormRadio from "./FormRadio";
 import FormDate from "./FormDate";
+import FormFile from "./FormFile";
+
+import { projectValidation } from "./validation/projectValidation";
 
 function ProjectFields({
   control,
@@ -42,7 +40,7 @@ function ProjectFields({
         rows={4}
       />
 
-      {/* Department Dropdown */}
+      {/* Department */}
       <FormSelect
         name="department"
         label="Department"
@@ -69,12 +67,15 @@ function ProjectFields({
           },
         ]}
       />
+
+      {/* Skills */}
       <FormMultiSelect
         name="skills"
         label="Skills"
         control={control}
         rules={projectValidation.skills}
         errors={errors}
+        disabled={isViewMode}
         options={[
           "React",
           "JavaScript",
@@ -85,8 +86,9 @@ function ProjectFields({
           "AI",
           "Cyber Security",
         ]}
-        disabled={isViewMode}
       />
+
+      {/* Checkbox */}
       <FormCheckbox
         name="acceptTerms"
         label="Accept Terms & Conditions"
@@ -96,6 +98,7 @@ function ProjectFields({
         disabled={isViewMode}
       />
 
+      {/* Radio */}
       <FormRadio
         name="gender"
         label="Gender"
@@ -119,6 +122,7 @@ function ProjectFields({
         ]}
       />
 
+      {/* Date */}
       <FormDate
         name="startDate"
         label="Start Date"
@@ -128,62 +132,32 @@ function ProjectFields({
         disabled={isViewMode}
       />
 
-      {/* Project Image */}
+      {/* File Upload */}
       {!isViewMode && (
-        <Controller
+        <FormFile
           name="image"
           control={control}
           rules={projectValidation.image(editMode)}
-          render={({ field }) => (
-            <Box mt={2}>
-              <TextField
-                type="file"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  accept: ".jpg,.jpeg,.png",
-                }}
-                onChange={(e) => field.onChange(e.target.files)}
-                error={!!errors.image}
-              />
-
-              {errors.image && (
-                <Typography
-                  color="error"
-                  variant="body2"
-                  sx={{
-                    mt: 1,
-                    ml: 1,
-                  }}
-                >
-                  {errors.image.message}
-                </Typography>
-              )}
-            </Box>
-          )}
+          errors={errors}
+          preview={preview}
+          selectedImage={selectedProject?.image}
+          disabled={isViewMode}
         />
       )}
 
-      {/* Image Preview */}
-      {(selectedProject?.image || preview?.[0]) && (
-        <Box mt={2}>
-          <img
-            src={
-              preview?.[0]
-                ? URL.createObjectURL(preview[0])
-                : selectedProject.image
-            }
-            alt="project"
-            width="100%"
-            height="220"
-            style={{
-              objectFit: "cover",
-              borderRadius: "10px",
-            }}
-          />
-        </Box>
+      {/* Image Preview in View Mode */}
+      {isViewMode && selectedProject?.image && (
+        <img
+          src={selectedProject.image}
+          alt="Project"
+          width="100%"
+          height="220"
+          style={{
+            marginTop: "20px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
+        />
       )}
     </>
   );
