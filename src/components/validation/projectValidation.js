@@ -13,6 +13,32 @@ export const projectValidation = {
     },
   },
 
+  department: {
+    required: "Department is required",
+  },
+
+  skills: {
+    validate: (value) => {
+      if (!value || value.length === 0) {
+        return "Select at least one skill";
+      }
+
+      return true;
+    },
+  },
+
+  acceptTerms: {
+    validate: (value) => value || "You must accept the terms and conditions",
+  },
+
+  gender: {
+    required: "Please select gender",
+  },
+
+  date: {
+    required: "Date is required",
+  },
+
   description: {
     required: "Description required",
 

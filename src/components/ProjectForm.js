@@ -1,9 +1,6 @@
 import { Dialog, Button, Box, Typography } from "@mui/material";
-
 import { useForm } from "react-hook-form";
-
 import { useEffect } from "react";
-
 import ProjectFields from "./ProjectFields";
 
 function ProjectForm({
@@ -25,6 +22,10 @@ function ProjectForm({
     defaultValues: {
       name: "",
       description: "",
+      department: "",
+      skills: [],
+      gender: "",
+      acceptTerms: false,
       image: null,
     },
   });
@@ -34,12 +35,20 @@ function ProjectForm({
       reset({
         name: selectedProject.name,
         description: selectedProject.description,
+        department: selectedProject.department || "",
+        skills: selectedProject.skills || [],
+        gender: selectedProject.gender || "",
+        acceptTerms: false,
         image: null,
       });
     } else {
       reset({
         name: "",
         description: "",
+        department: "",
+        skills: [],
+        gender: "",
+        acceptTerms: false,
         image: null,
       });
     }
@@ -50,9 +59,7 @@ function ProjectForm({
 
     const finalData = {
       ...data,
-      image: file
-        ? URL.createObjectURL(file)
-        : selectedProject?.image,
+      image: file ? URL.createObjectURL(file) : selectedProject?.image,
     };
 
     if (editMode) {
@@ -63,8 +70,8 @@ function ProjectForm({
                 ...project,
                 ...finalData,
               }
-            : project
-        )
+            : project,
+        ),
       );
     } else {
       addProject(finalData);
@@ -75,12 +82,9 @@ function ProjectForm({
     setOpen(false);
   };
 
-  const isViewMode =
-    selectedProject &&
-    !editMode;
+  const isViewMode = selectedProject && !editMode;
 
-  const preview =
-    watch("image");
+  const preview = watch("image");
 
   return (
     <Dialog
@@ -96,52 +100,35 @@ function ProjectForm({
           width: 500,
         }}
       >
-        <Typography
-          variant="h5"
-          mb={2}
-        >
+        <Typography variant="h5" mb={2}>
           {isViewMode
             ? "View Project"
             : editMode
-            ? "Edit Project"
-            : "Add Project"}
+              ? "Edit Project"
+              : "Add Project"}
         </Typography>
 
-        <form
-          onSubmit={handleSubmit(submit)}
-        >
+        <form onSubmit={handleSubmit(submit)}>
           <ProjectFields
             control={control}
             errors={errors}
             preview={preview}
-            selectedProject={
-              selectedProject
-            }
+            selectedProject={selectedProject}
             editMode={editMode}
-            isViewMode={
-              isViewMode
-            }
+            isViewMode={isViewMode}
           />
 
           <Box mt={3}>
             {!isViewMode && (
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-              >
-                {editMode
-                  ? "Update"
-                  : "Save"}
+              <Button type="submit" variant="contained" fullWidth>
+                {editMode ? "Update" : "Save"}
               </Button>
             )}
 
             <Button
               variant="outlined"
               fullWidth
-              sx={{
-                mt: 2,
-              }}
+              sx={{ mt: 2 }}
               onClick={() => {
                 setOpen(false);
                 reset();
